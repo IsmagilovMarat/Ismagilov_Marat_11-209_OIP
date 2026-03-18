@@ -10,9 +10,9 @@ namespace EnglishTextCrawler
         static async Task Main(string[] args)
         {
             //Task1
-            //string outputDirectory = "downloaded_english_pages";
-            //var crawler = new GutenbergCrawler(outputDirectory);
-            //await crawler.CrawlAsync(SitesUrls.urlsToDownload);
+            string outputDirectory = "downloaded_english_pages";
+            var crawler = new GutenbergCrawler(outputDirectory);
+            await crawler.CrawlAsync(SitesUrls.urlsToDownload);
 
 
             //Task2
@@ -28,25 +28,25 @@ namespace EnglishTextCrawler
 
             //Task3 
 
-            string docsDirectory = "downloaded_english_pages";
-            string indexFile = "inverted_index.txt";
+            //string docsDirectory = "downloaded_english_pages";
+            //string indexFile = "inverted_index.txt";
 
-            Console.WriteLine("Создание инвертированного индекса...\n");
+            //Console.WriteLine("Создание инвертированного индекса...\n");
 
-            var indexBuilder = new InvertedIndexBuilder();
+            //var indexBuilder = new InvertedIndexBuilder();
 
-            // Строим индекс
-            var invertedIndex = await indexBuilder.BuildIndexAsync(docsDirectory);
+            //// Строим индекс
+            //var invertedIndex = await indexBuilder.BuildIndexAsync(docsDirectory);
 
-            // Сохраняем индекс в файл
-            await indexBuilder.SaveIndexAsync(invertedIndex, indexFile);
+            //// Сохраняем индекс в файл
+            //await indexBuilder.SaveIndexAsync(invertedIndex, indexFile);
 
-            Console.WriteLine($"\nИндекс сохранён в файл: {indexFile}");
-            Console.WriteLine($"Всего терминов в индексе: {invertedIndex.Count}");
+            //Console.WriteLine($"\nИндекс сохранён в файл: {indexFile}");
+            //Console.WriteLine($"Всего терминов в индексе: {invertedIndex.Count}");
 
-            // Запускаем поисковый движок
-            var searchEngine = new BooleanSearchEngine(invertedIndex, docsDirectory);
-            await searchEngine.RunAsync();
+            //// Запускаем поисковый движок
+            //var searchEngine = new BooleanSearchEngine(invertedIndex, docsDirectory);
+            //await searchEngine.RunAsync();
 
         }
     }

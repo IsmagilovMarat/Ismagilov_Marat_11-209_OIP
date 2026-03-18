@@ -11,7 +11,6 @@ namespace Task1OIP
         private readonly string _outputDir;
         private readonly HttpClient _httpClient;
         private readonly List<(string FileName, string Url)> _index;
-
         public GutenbergCrawler(string outputDir)
         {
             _outputDir = outputDir;
@@ -30,8 +29,6 @@ namespace Task1OIP
 
         public async Task CrawlAsync(string[] urls)
         {
-            Console.WriteLine($"Начинаем скачивание {Math.Min(urls.Length, 100)} английских текстов...\n");
-
             int downloaded = 0;
             int errors = 0;
 
@@ -41,7 +38,6 @@ namespace Task1OIP
                 string fileName = Path.GetFileName(url);
 
                 string shortName = fileName.Length > 25 ? fileName.Substring(0, 22) + "..." : fileName.PadRight(25);
-                Console.Write($"[{i + 1,3}/100] {shortName} ");
 
                 try
                 {
@@ -53,44 +49,33 @@ namespace Task1OIP
 
                         if (!string.IsNullOrEmpty(content) && content.Length > 1000)
                         {
-                            string localFile = $"page_{downloaded + 1:D4}.txt";
+                            string localFile = $"выкачка_{downloaded + 1:D4}.txt";
                             string filePath = Path.Combine(_outputDir, localFile);
 
                             await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
                             _index.Add((localFile, url));
                             downloaded++;
 
-                            Console.WriteLine($"✓ {content.Length / 1000,3}KB");
                         }
                         else
                         {
                             errors++;
-                            Console.WriteLine($"✗ too short");
                         }
                     }
                     else
                     {
                         errors++;
-                        Console.WriteLine($"✗ HTTP {(int)response.StatusCode}");
                     }
                 }
                 catch (Exception ex)
                 {
                     errors++;
-                    string errorMsg = ex.Message.Length > 20 ? ex.Message.Substring(0, 17) + "..." : ex.Message;
-                    Console.WriteLine($"✗ {errorMsg}");
+                    Console.WriteLine($"Ошибки:{errors}");
                 }
 
             }
-
             string indexPath = Path.Combine(_outputDir, "index.txt");
             await File.WriteAllLinesAsync(indexPath, _index.Select(e => $"{e.FileName}\t{e.Url}"));
-
-            Console.WriteLine($"\n{new string('=', 50)}");
-            Console.WriteLine($"Завершено! Скачано: {downloaded} файлов, ошибок: {errors}");
-            Console.WriteLine($"Файлы сохранены в: {_outputDir}");
-            Console.WriteLine($"Индекс: {indexPath}");
-
         }
     }
 }
