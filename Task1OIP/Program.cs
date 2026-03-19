@@ -10,21 +10,13 @@ namespace EnglishTextCrawler
         static async Task Main(string[] args)
         {
             //Task1
-            string outputDirectory = "downloaded_english_pages";
-            var crawler = new GutenbergCrawler(outputDirectory);
+            string inputDirectory = "1_Задание_Index+Страницы";
+            var crawler = new Crawler(inputDirectory);
             await crawler.CrawlAsync(SitesUrls.urlsToDownload);
 
 
             //Task2
-            //string inputDirectory = "downloaded_english_pages";
-            //string outputDirectory = "processed_texts";
-
-            //Console.WriteLine("Начинаем обработку английских текстов...");
-            //Console.WriteLine($"Директория с файлами: {inputDirectory}");
-            //Console.WriteLine($"Директория для результатов: {outputDirectory}\n");
-
-            //var processor = new TextProcessor(inputDirectory, outputDirectory);
-            //await processor.ProcessAllFilesAsync();
+            
 
             //Task3 
 

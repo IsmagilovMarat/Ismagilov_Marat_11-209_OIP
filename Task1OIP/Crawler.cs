@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Task1OIP
 {
-    public class GutenbergCrawler
+    public class Crawler
     {
         private readonly string _outputDir;
         private readonly HttpClient _httpClient;
         private readonly List<(string FileName, string Url)> _index;
-        public GutenbergCrawler(string outputDir)
+        public Crawler(string outputDir)
         {
             _outputDir = outputDir;
             _index = new List<(string, string)>();
@@ -30,47 +31,67 @@ namespace Task1OIP
         public async Task CrawlAsync(string[] urls)
         {
             int downloaded = 0;
-            int errors = 0;
-
-            for (int i = 0; i < Math.Min(urls.Length, 100); i++)
+            string currentUrl = "";
+            int count = 0;
+            int n = 40000;
+            for (int i = 1; i < Math.Min(urls.Length, 100); i++)
             {
                 string url = urls[i];
-                string fileName = Path.GetFileName(url);
+                string lastThreeSymbols = url.Substring(url.Length - 3);
+                int lastThreeNumbers = int.Parse(lastThreeSymbols);
+                lastThreeNumbers = i;
+                if (i < 10)
+                {
+                     currentUrl = url.Substring(0, url.Length - 1);
+                }
+                if (i < 100 && i>9)
+                {
+                     currentUrl = url.Substring(0, url.Length - 2);
+                }
+                if (i >99)
+                {
+                     currentUrl = url.Substring(0, url.Length - 3);
+                }
+                currentUrl = currentUrl + lastThreeNumbers;
 
-                string shortName = fileName.Length > 25 ? fileName.Substring(0, 22) + "..." : fileName.PadRight(25);
+                string fileName = Path.GetFileName(currentUrl);
 
                 try
                 {
-                    var response = await _httpClient.GetAsync(url);
+                    var response = await _httpClient.GetAsync(currentUrl);
 
                     if (response.IsSuccessStatusCode)
                     {
                         string content = await response.Content.ReadAsStringAsync();
-
-                        if (!string.IsNullOrEmpty(content) && content.Length > 1000)
+                        
+                        
+                         content = content.Substring(i + n,i + n + 1500);
+                        n= n+1500;
+                        if (!string.IsNullOrEmpty(content))
                         {
                             string localFile = $"выкачка_{downloaded + 1:D4}.txt";
                             string filePath = Path.Combine(_outputDir, localFile);
 
                             await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
-                            _index.Add((localFile, url));
+                            _index.Add((localFile, currentUrl));
                             downloaded++;
-
+                            Console.WriteLine($"Скачана страница:{currentUrl}");
                         }
                         else
                         {
-                            errors++;
+                            Console.WriteLine("Error");
                         }
                     }
                     else
                     {
-                        errors++;
+                            Console.WriteLine("Error");
+
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    errors++;
-                    Console.WriteLine($"Ошибки:{errors}");
+                    Console.WriteLine("Error");
+
                 }
 
             }

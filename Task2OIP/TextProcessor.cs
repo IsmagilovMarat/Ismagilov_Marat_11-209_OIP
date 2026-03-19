@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -78,7 +79,7 @@ namespace Task1OIP
 
         public async Task ProcessAllFilesAsync()
         {
-            var textFiles = Directory.GetFiles(_inputDir, "*.txt")
+            var textFiles = Directory.GetFiles(@$"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Task1OIP/Task1OIP/bin/Debug/net8.0/1_Задание_Index + Страницы,"+"*.txt")
                                      .Where(f => !f.Contains("index.txt"))
                                      .OrderBy(f => f)
                                      .ToList();
