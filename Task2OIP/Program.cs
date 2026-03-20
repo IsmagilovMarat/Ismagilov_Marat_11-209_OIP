@@ -7,7 +7,7 @@ namespace Task2OIP
         static async Task Main(string[] args)
         {
             string inputDirectory = "1_Задание_Index+Страницы";
-            string outputDirectory = "processed_texts";
+            string outputDirectory = "токены_леммы";
             var processor = new TextProcessor(inputDirectory, outputDirectory);
             await processor.ProcessAllFilesAsync();
         }
