@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task1OIP", "Task1OIP\Task1O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task2OIP", "Task2OIP\Task2OIP.csproj", "{C72C70CE-9061-4C97-AC84-C8D66E9EB685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task3OIP", "Task3OIP\Task3OIP.csproj", "{46D11B81-39CD-4D11-AC2B-6B3E8F5BC266}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C72C70CE-9061-4C97-AC84-C8D66E9EB685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C72C70CE-9061-4C97-AC84-C8D66E9EB685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C72C70CE-9061-4C97-AC84-C8D66E9EB685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46D11B81-39CD-4D11-AC2B-6B3E8F5BC266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D11B81-39CD-4D11-AC2B-6B3E8F5BC266}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D11B81-39CD-4D11-AC2B-6B3E8F5BC266}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D11B81-39CD-4D11-AC2B-6B3E8F5BC266}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
