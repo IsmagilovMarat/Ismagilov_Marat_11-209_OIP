@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -79,6 +80,29 @@ namespace Task1OIP
 
         public async Task ProcessAllFilesAsync()
         {
+            string relativePath = "\\Task1OIP\\bin\\Debug\\net8.0\\1_Задание_Index+Страницы";
+            string absolutePath =  Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", ".."));
+            string oldPath = absolutePath+ relativePath;
+
+            string goalPath = Directory.GetCurrentDirectory();
+
+            Directory.CreateDirectory(goalPath+"/ВыгрузкаИз1Задания");
+            string newPath = goalPath + "/ВыгрузкаИз1Задания";
+            string[] allOldFiles = Directory.GetFiles(oldPath);
+            allOldFiles = allOldFiles.Skip(1).ToArray();
+            string filePath = Path.Combine(newPath, "выкачка");
+            
+
+            for (int i = 0; i < allOldFiles.Length; i++)
+            {
+                File.WriteAllText(filePath+i,"");
+                string[] allNewFiles = Directory.GetFiles(newPath);
+
+
+                File.Copy(allOldFiles[i], allNewFiles[i], overwrite: true);
+            }
+            
+
             var textFiles = Directory.GetFiles(@$"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}/Task1OIP/Task1OIP/bin/Debug/net8.0/1_Задание_Index + Страницы,"+"*.txt")
                                      .Where(f => !f.Contains("index.txt"))
                                      .OrderBy(f => f)
