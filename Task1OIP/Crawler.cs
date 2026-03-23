@@ -31,51 +31,31 @@ namespace Task1OIP
         public async Task CrawlAsync(string[] urls)
         {
             int downloaded = 0;
-            string currentUrl = "";
-            int count = 0;
             int n = 40000;
             for (int i = 1; i < Math.Min(urls.Length, 100); i++)
             {
                 string url = urls[i];
-                string lastThreeSymbols = url.Substring(url.Length - 3);
-                int lastThreeNumbers = int.Parse(lastThreeSymbols);
-                lastThreeNumbers = i;
-                if (i < 10)
-                {
-                     currentUrl = url.Substring(0, url.Length - 1);
-                }
-                if (i < 100 && i>9)
-                {
-                     currentUrl = url.Substring(0, url.Length - 2);
-                }
-                if (i >99)
-                {
-                     currentUrl = url.Substring(0, url.Length - 3);
-                }
-                currentUrl = currentUrl + lastThreeNumbers;
+                
 
-                string fileName = Path.GetFileName(currentUrl);
+                string fileName = Path.GetFileName(url);
 
                 try
                 {
-                    var response = await _httpClient.GetAsync(currentUrl);
+                    var response = await _httpClient.GetAsync(url);
 
                     if (response.IsSuccessStatusCode)
                     {
                         string content = await response.Content.ReadAsStringAsync();
                         
-                        
-                         content = content.Substring(i + n,i + n + 1500);
-                        n= n+1500;
                         if (!string.IsNullOrEmpty(content))
                         {
                             string localFile = $"выкачка_{downloaded + 1:D4}.txt";
                             string filePath = Path.Combine(_outputDir, localFile);
 
                             await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
-                            _index.Add((localFile, currentUrl));
+                            _index.Add((localFile, url));
                             downloaded++;
-                            Console.WriteLine($"Скачана страница:{currentUrl}");
+                            Console.WriteLine($"Скачана страница:{url}");
                         }
                         else
                         {
