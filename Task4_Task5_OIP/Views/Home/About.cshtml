@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "О системе";
+}
+
+<div style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h1 style="color: #667eea; margin-bottom: 30px;">📚 О поисковой системе</h1>
+
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="color: #333; margin-bottom: 20px;">🔍 Как это работает</h2>
+
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 10px;">Поиск по леммам</h3>
+            <p style="line-height: 1.6; color: #666;">
+                Система использует лемматизацию - приведение слов к нормальной форме.
+                Это позволяет находить документы независимо от грамматических форм слов в запросе.
+                Например, запрос "искать" найдет документы со словами "ищет", "искал", "поиск" и т.д.
+            </p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 10px;">Векторная модель TF-IDF</h3>
+            <p style="line-height: 1.6; color: #666;">
+                Каждый документ и поисковый запрос представляются в виде векторов в многомерном пространстве.
+                TF-IDF (Term Frequency-Inverse Document Frequency) вычисляет важность каждого термина:
+            </p>
+            <ul style="line-height: 1.8; color: #666; margin-left: 20px; margin-top: 10px;">
+                <li><strong>TF (Term Frequency)</strong> - частота термина в документе</li>
+                <li><strong>IDF (Inverse Document Frequency)</strong> - редкость термина во всей коллекции</li>
+                <li><strong>TF-IDF</strong> = TF × IDF - итоговый вес термина</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 10px;">Косинусное сходство</h3>
+            <p style="line-height: 1.6; color: #666;">
+                Релевантность документа запросу измеряется косинусом угла между их векторами.
+                Значение от 0 до 1, где 1 означает максимальное сходство.
+            </p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 10px;">⚡ Оптимизация</h3>
+            <ul style="line-height: 1.8; color: #666; margin-left: 20px;">
+                <li>Инвертированный индекс для быстрого поиска</li>
+                <li>Предварительное вычисление норм векторов</li>
+                <li>Кэширование IDF весов</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 style="color: #667eea; margin-bottom: 10px;">🎯 Особенности</h3>
+            <ul style="line-height: 1.8; color: #666; margin-left: 20px;">
+                <li>Автоматическое удаление стоп-слов</li>
+                <li>Нормализация запросов (нижний регистр, удаление пунктуации)</li>
+                <li>Визуализация совпадающих лемм с весами</li>
+                <li>Быстрый поиск с использованием инвертированного индекса</li>
+            </ul>
+        </div>
+    </div>
+</div>

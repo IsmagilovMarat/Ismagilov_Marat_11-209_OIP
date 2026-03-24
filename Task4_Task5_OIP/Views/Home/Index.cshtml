@@ -1,0 +1,441 @@
+﻿@model Task5_DEMO_OIP.Models.SearchViewModel
+@{
+    ViewData["Title"] = "Поиск по леммам";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Поисковая система</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+            .header h1 {
+                font-size: 2.5em;
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                font-size: 1.1em;
+                opacity: 0.9;
+            }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .search-container {
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+            .search-input:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .search-button {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .search-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+
+            .search-button:active {
+                transform: translateY(0);
+            }
+
+        .info-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .info-item {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .results-container {
+            padding: 40px;
+        }
+
+        .results-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+            .results-header h2 {
+                color: #333;
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+
+        .results-info {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .result-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .result-item:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                border-color: #667eea;
+            }
+
+        .result-rank {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .result-content {
+            flex: 1;
+        }
+
+        .result-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .similarity-score {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .matching-terms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .term-badge {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .term-weight {
+            color: #667eea;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .error-message {
+            background: #fee;
+            border-left: 4px solid #f44;
+            padding: 15px;
+            border-radius: 8px;
+            color: #c33;
+            margin-top: 20px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Поиск по леммам</h1>
+            <p>Векторный поиск на основе TF-IDF и косинусного сходства</p>
+            <div class="stats-bar">
+                📊 Индекс загружен
+            </div>
+        </div>
+
+        <div class="search-container">
+            <form method="get" asp-action="Index" class="search-form" id="searchForm">
+                <div class="search-input-group">
+                    <input type="text"
+                           name="query"
+                           class="search-input"
+                           placeholder="Введите поисковый запрос (например: 'информационный поиск')..."
+                           value="@Model.Query"
+                           autofocus />
+                    <button type="submit" class="search-button" id="searchButton">
+                        🔍 Найти
+                    </button>
+                </div>
+            </form>
+
+            @if (Model.TotalDocuments > 0)
+            {
+                <div class="info-panel">
+                    <div class="info-item">
+                        <div class="info-label">📄 Всего документов</div>
+                        <div class="info-value">@Model.TotalDocuments</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">🔤 Уникальных лемм</div>
+                        <div class="info-value">@Model.UniqueTerms.ToString("N0")</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">⚡ Метод поиска</div>
+                        <div class="info-value">Косинусное сходство</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="results-container">
+            @if (Model.IsSearchPerformed)
+            {
+                <div class="results-header">
+                    <h2>📊 Результаты поиска</h2>
+                    <div class="results-info">
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="error-message">
+                                ⚠️ @Model.ErrorMessage
+                            </div>
+                        }
+                        else if (Model.Results.Any())
+                        {
+                            <span>Найдено документов: <strong>@Model.Results.Count</strong></span>
+                            <span style="margin-left: 20px">Время поиска: <strong>@Model.SearchTime.ToString("F2")</strong> мс</span>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.Results.Any())
+                {
+                    <div class="results-list">
+                        @for (int i = 0; i < Model.Results.Count; i++)
+                        {
+                            var result = Model.Results[i];
+                            <div class="result-item">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <div class="result-rank">@(i + 1)</div>
+                                    <div class="result-content">
+                                        <div class="result-title">📄 @result.FileName</div>
+                                        <div class="result-meta">
+                                            <span>ID документа: @result.DocumentId</span>
+                                            <span class="similarity-score">
+                                                Сходство: @result.Similarity.ToString("F4")
+                                            </span>
+                                        </div>
+
+                                        @if (result.MatchingTerms.Any())
+                                        {
+                                            <div class="matching-terms">
+                                                <strong>Совпадающие леммы:</strong>
+                                                @foreach (var term in result.MatchingTerms.OrderByDescending(t => t.Value).Take(5))
+                                                {
+                                                    <span class="term-badge">
+                                                        @term.Key
+                                                        <span class="term-weight">(@term.Value.ToString("F3"))</span>
+                                                    </span>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else if (string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="no-results">
+                        <div style="font-size: 48px; margin-bottom: 20px;">😕</div>
+                        <div style="font-size: 1.2em;">Ничего не найдено</div>
+                        <div style="margin-top: 10px;">Попробуйте изменить поисковый запрос</div>
+                        <div style="margin-top: 5px; font-size: 0.9em;">Например: "информация", "поиск", "система"</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-results">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🔍</div>
+                    <div style="font-size: 1.2em;">Введите поисковый запрос</div>
+                    <div style="margin-top: 10px;">Примеры запросов:</div>
+                    <div style="margin-top: 5px; font-size: 0.9em; color: #667eea;">
+                        "информационный поиск" | "векторная модель" | "tf idf"
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="footer">
+            <p>🔍 Поисковая система на основе векторной модели TF-IDF | Поиск по леммам | Косинусное сходство | Инвертированный индекс</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function() {
+            const button = document.getElementById('searchButton');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div> Поиск...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 3000);
+        });
+
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchForm').submit();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.result-item');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.3s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
