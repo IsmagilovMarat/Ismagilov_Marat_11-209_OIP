@@ -16,4 +16,8 @@ DEPLOYMENTMANUAL находится в проекте Task1IOIP
 2. BooleanSearchEngine находит необходимые сочетания при помощи AND OR NOT  
 3. Сохранил результат в папке Data  
 
+4 задание:    
+1.в классе TfIDf реализованы два метода CalculateAndSaveAsync и CalculateAndSaveByLemmaAsync   
+2.в них счтаются tf и idf и сохраняются в соответсвующие файлы TF_IDF_Токены TF_IDF_Леммы  
+3. Сохранил результат в папке Data    
 
