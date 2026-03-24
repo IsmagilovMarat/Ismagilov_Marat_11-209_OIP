@@ -8,7 +8,8 @@ namespace Task2OIP
         {
             string inputDirectory = "1_Задание_Index+Страницы";
             string outputDirectory = "токены_леммы";
-            var processor = new TextProcessor(inputDirectory, outputDirectory);
+            string outputTokens = "токены";
+            var processor = new TextProcessor(inputDirectory, outputDirectory, outputTokens);
             await processor.ProcessAllFilesAsync();
         }
     }

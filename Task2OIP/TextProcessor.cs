@@ -12,14 +12,18 @@ namespace Task1OIP
     {
         private readonly string _inputDir;
         private readonly string _outputDir;
+        private readonly string _outputTokens;
         private readonly HashSet<string> _stopWords;
         private readonly Regex _validTokenRegex;
 
-        public TextProcessor(string inputDir, string outputDir)
+        public TextProcessor(string inputDir, string outputDir,string outputTokens)
         {
+            _outputTokens = outputTokens;
             _inputDir = inputDir;
             _outputDir = outputDir;
             Directory.CreateDirectory(outputDir);
+            Directory.CreateDirectory(outputTokens);
+
 
             _stopWords = new HashSet<string>(LoadStopWords(), StringComparer.OrdinalIgnoreCase);
             _validTokenRegex = new Regex(@"^[a-z]+('[a-z]+)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -79,32 +83,27 @@ namespace Task1OIP
                         tokenToLemma[token] = lemma;
                     }
 
-                    var lemmaGroups = new Dictionary<string, List<string>>();
-                    foreach (var kvp in tokenToLemma)
+                    var tokensGroup = new List<string>();
+                    foreach (var token in uniqueTokens)
                     {
-                        if (!lemmaGroups.ContainsKey(kvp.Value))
-                        {
-                            lemmaGroups[kvp.Value] = new List<string>();
-                        }
-                        lemmaGroups[kvp.Value].Add(kvp.Key);
+                        tokensGroup.Add(token.ToString());
                     }
 
-                    string tokensFile = Path.Combine(_outputDir, $"tokens_with_lemmas_{fileNumber:D4}.txt");
-                    using (var writer = new StreamWriter(tokensFile, false, Encoding.UTF8))
+                    string tokensLemmasFile = Path.Combine(_outputDir, $"tokens_with_lemmas_{fileNumber:D4}.txt");
+                    using (var writer = new StreamWriter(tokensLemmasFile, false, Encoding.UTF8))
                     {
                         foreach (var token in uniqueTokens)
                         {
-                            await writer.WriteLineAsync($"{token}\t{tokenToLemma[token]}");
+                            await writer.WriteLineAsync($"{tokenToLemma[token]}\t{token}");
                         }
                     }
 
-                    string lemmasFile = Path.Combine(_outputDir, $"lemmas_{fileNumber:D4}.txt");
-                    using (var writer = new StreamWriter(lemmasFile, false, Encoding.UTF8))
+                    string tokensFile = Path.Combine(_outputTokens, $"tokens_{fileNumber:D4}.txt");
+                    using (var writer = new StreamWriter(tokensFile, false, Encoding.UTF8))
                     {
-                        foreach (var lemma in lemmaGroups.OrderBy(l => l.Key))
+                        foreach (var token in tokensGroup)
                         {
-                            string line = $"{lemma.Key}: {string.Join(", ", lemma.Value.OrderBy(t => t))}";
-                            await writer.WriteLineAsync(line);
+                            await writer.WriteLineAsync(token);
                         }
                     }
 
