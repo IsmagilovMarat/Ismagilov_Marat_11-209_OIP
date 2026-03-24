@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Task3OIP
 {
-    // Классы для разбора запроса
     public abstract class QueryExpression { }
 
     public class TermExpression : QueryExpression

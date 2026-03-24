@@ -30,7 +30,8 @@ namespace Task3OIP
                 Console.Write("Введите запрос: ");
                 string? query = Console.ReadLine()?.Trim();
 
-                if (string.IsNullOrEmpty(query) || query == "exit" || query == "quit")
+                if (string.IsNullOrEmpty(query) || query.Equals("exit", StringComparison.OrdinalIgnoreCase)
+                    || query.Equals("quit", StringComparison.OrdinalIgnoreCase))
                     break;
 
                 try
@@ -42,9 +43,9 @@ namespace Task3OIP
 
                     await DisplayResultsAsync(query, result);
                 }
-                catch 
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Ошибка в запросе");
+                    Console.WriteLine($"Ошибка в запросе: {ex.Message}");
                 }
 
                 Console.WriteLine();
@@ -87,29 +88,26 @@ namespace Task3OIP
 
         private async Task DisplayResultsAsync(string query, HashSet<int> docIds)
         {
+            Console.WriteLine($"\nРезультаты поиска для запроса: \"{query}\"");
+            Console.WriteLine($"Найдено документов: {docIds.Count}");
+
+            if (docIds.Count == 0)
+            {
+                return;
+            }
+
             int count = 0;
             foreach (int docId in docIds.OrderBy(x => x))
             {
-                string fileName = _docFiles[docId - 1];
-                string preview = await GetDocumentPreviewAsync(fileName);
-
                 count++;
+                string filePath = _docFiles[docId - 1];
+                string fileName = Path.GetFileName(filePath);
+
+                Console.WriteLine($"[{count}] Документ {docId}: {fileName}");
+                Console.WriteLine();
             }
         }
 
-        private async Task<string> GetDocumentPreviewAsync(string filePath)
-        {
-            try
-            {
-                string content = await File.ReadAllTextAsync(filePath, Encoding.UTF8);
-
-                content = Regex.Replace(content, @"\s+", " ");
-                return content.Length > 200 ? content.Substring(0, 197) + "..." : content;
-            }
-            catch
-            {
-                return "Не удалось загрузить";
-            }
-        }
+       
     }
 }

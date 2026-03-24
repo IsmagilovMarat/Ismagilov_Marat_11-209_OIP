@@ -126,9 +126,7 @@ namespace Task3OIP
         {
             using (var writer = new StreamWriter(filename, false, Encoding.UTF8))
             {
-                await writer.WriteLineAsync("# Инвертированный индекс");
                 await writer.WriteLineAsync($"# Всего терминов: {index.Count}");
-                await writer.WriteLineAsync("# Формат: термин -> список документов\n");
 
                 foreach (var kvp in index)
                 {
