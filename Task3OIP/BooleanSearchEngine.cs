@@ -25,6 +25,7 @@ namespace Task3OIP
 
         public async Task RunAsync()
         {
+
             while (true)
             {
                 Console.Write("Введите запрос: ");
